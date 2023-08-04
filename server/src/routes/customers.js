@@ -7,13 +7,11 @@ const mysqlPool = mysql.createPool(DB_CONFIG).promise();
 
 router.post('/customers', async (req, res) => {
   const payload = req.body;
-  console.log(payload);
   try {
     const [response] = await mysqlPool.execute(
       'INSERT INTO customers (full_name, email, dob, auth_id) VALUES (?, ?, ?, ?)',
       [payload.full_name, payload.email, payload.dob, payload.auth_id]
     );
-    console.log(response);
     return res.status(200).json(response);
   } catch (err) {
     return res.status(500).json(err);
@@ -24,6 +22,16 @@ router.get('/customers', async (req, res) => {
   try {
     const [customers] = await mysqlPool.execute('SELECT * FROM customers');
     return res.json(customers);
+  } catch (error) {
+    return res.status(500).end();
+  }
+});
+
+router.delete('/customers/:customer_id', async (req, res) => {
+  try {
+    const customerId = req.params.customer_id;
+    const [request] = await mysqlPool.execute(`DELETE FROM customers WHERE id = ${customerId}`);
+    return res.json(request);
   } catch (error) {
     return res.status(500).end();
   }
