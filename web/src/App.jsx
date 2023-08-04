@@ -1,13 +1,18 @@
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import "./App.css";
+import Layout from "./components/Layout";
+import Customers from "./pages/Customers";
 
-import './App.css'
+const routesDefinitions = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      { path: "/customers", element: <Customers /> }
+    ],
+  },
+]);
 
-function App() {
+const App = () => <RouterProvider router={routesDefinitions} />;
 
-  return (
-    <>
-   
-    </>
-  )
-}
-
-export default App
+export default App;
