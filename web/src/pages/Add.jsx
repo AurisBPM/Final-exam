@@ -1,10 +1,10 @@
+import AddCustomerForm from "../components/add-customer-form/AddCustomerForm";
+
 const Add = () => {
 
 
     return (
-      <>
-        <h1>Add page</h1>
-      </>
+     <AddCustomerForm></AddCustomerForm>
     );
   };
   

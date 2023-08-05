@@ -4,6 +4,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Customers from "./pages/Customers";
 import Add from "./pages/Add";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const routesDefinitions = createBrowserRouter([
   {
@@ -18,6 +20,13 @@ const routesDefinitions = createBrowserRouter([
   },
 ]);
 
-const App = () => <RouterProvider router={routesDefinitions} />;
+const App = () => {
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <RouterProvider router={routesDefinitions} />
+    </LocalizationProvider>
+
+  )
+} 
 
 export default App;
