@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import CustomerRow from "../components/customer-row/CustomerRow";
+
 
 const Customers = () => {
 
@@ -8,11 +9,25 @@ const Customers = () => {
 
   const customersUrl = "http://localhost:8080/customers";
 
+  const deleteCustomer = async (id) => {
+    try {
+        const request = await axios.delete("http://localhost:8080/customers/" + id);
+        setCustomers((oldCustomers) => {
+           return oldCustomers.filter((customer) => {
+                return id != customer.id
+            })
+        });
+    } catch (error) {
+        console.log(error);
+    }
+    
+  }
+
   const fetchCustomers = async () => {
     try {
       const response = await axios.get(customersUrl);
       console.log(response);
-      setCustomers(response.data.data);
+      setCustomers(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -23,9 +38,13 @@ const Customers = () => {
   }, []);
 
   return (
-    <>
-      <h1>Customers page</h1>
-    </>
+    <div className='container'>
+    {customers.map((customer) => {
+        return (
+            <CustomerRow key={customer.id} name={customer.full_name} dob={customer.dob} email={customer.email} id={customer.id} deleteFc={deleteCustomer}/>
+        )
+    })}
+  </div>
   );
 };
 

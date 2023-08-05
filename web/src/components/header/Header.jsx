@@ -1,17 +1,12 @@
 import { Link } from "react-router-dom";
 import "./Header.css";
+import logo from "../../assets/logo.svg"; 
 
 const Header = () => {
   return (
     <nav>
-      <ul>
-        <li>
-          <Link to="/login">Login</Link>
-        </li>
-        <li>
-          <Link to="/register">Register</Link>
-        </li>
-      </ul>
+      <img src={logo} alt="logo" className="logo"/>
+      <Link to="/login">Log out</Link>
     </nav>
   );
 };

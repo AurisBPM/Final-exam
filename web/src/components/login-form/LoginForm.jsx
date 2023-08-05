@@ -30,6 +30,7 @@ const submitLogin = async (event) => {
     try {
         const request = await axios.post("http://localhost:8080/login", body);
         console.log(request);
+        location.href = `/customers`;
         
         
     } catch (error) {
@@ -51,7 +52,7 @@ const submitLogin = async (event) => {
     return (
         <form className="loginForm" onSubmit={submitLogin}>
             <Stack spacing={2}>
-                <Typography variant="h3">LOGIN</Typography>
+                <Typography variant="h4">Events Management</Typography>
             <TextField
 type="email"
 placeholder="Email"
@@ -72,9 +73,10 @@ autoFocus
 value={password}
 onChange={passwordInputChange}
 />
-<Button variant="contained" type="submit" disabled={isLoading}>
+<div><Button variant="contained" type="submit" disabled={isLoading} px={10}>
   Login
-</Button>
+</Button></div>
+
 <Typography variant="div">{error}</Typography>
             </Stack>
     
