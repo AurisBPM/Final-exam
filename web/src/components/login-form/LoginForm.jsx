@@ -2,6 +2,7 @@ import {  Button, TextField, Stack, Typography } from "@mui/material";
 import "./LoginForm.css";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
 
@@ -9,6 +10,8 @@ const [ email, setEmail ] = useState("");
 const [ password, setPassword ] = useState("");
 const [isLoading, setLoading] = useState(false);
 const [error, setError] = useState("");
+
+const navigate = useNavigate();
 
 const emailInputChange = (e) => {
     setEmail(e.target.value);
@@ -29,9 +32,7 @@ const submitLogin = async (event) => {
 
     try {
         const request = await axios.post("http://localhost:8080/login", body);
-        console.log(request);
-        location.href = `/customers`;
-        
+        navigate(`/customers`)
         
     } catch (error) {
         console.log(error);
@@ -51,7 +52,7 @@ const submitLogin = async (event) => {
 
     return (
         <form className="loginForm" onSubmit={submitLogin}>
-            <Stack spacing={2}>
+            <Stack spacing={2} alignItems="center">
                 <Typography variant="h4">Events Management</Typography>
             <TextField
 type="email"
@@ -73,9 +74,9 @@ autoFocus
 value={password}
 onChange={passwordInputChange}
 />
-<div><Button variant="contained" type="submit" disabled={isLoading} px={10}>
+<Button variant="contained" type="submit" disabled={isLoading}>
   Login
-</Button></div>
+</Button>
 
 <Typography variant="div">{error}</Typography>
             </Stack>
