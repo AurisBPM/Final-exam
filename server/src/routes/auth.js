@@ -41,7 +41,6 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   let payload = req.body;
-
   try {
     payload = await loginSchema.validateAsync(payload);
   } catch (error) {
