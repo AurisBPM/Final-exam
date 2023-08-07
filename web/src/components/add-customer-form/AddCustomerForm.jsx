@@ -10,7 +10,7 @@ const AddCustomerForm = () => {
 
 const [ email, setEmail ] = useState("");
 const [ name, setName ] = useState("");
-const [ dob, setDob ] = useState(new Date());
+const [ dob, setDob ] = useState("");
 const [isLoading, setLoading] = useState(false);
 const [error, setError] = useState("");
 
@@ -22,6 +22,12 @@ const submitCustomerForm = async (event) => {
     setError("");
     event.preventDefault();
     console.log(dob);
+
+    if (!dob) {
+        setError("Please select Date of Birth");
+        setLoading(false);
+return;
+    }
 
     const adjustedDate = dob.toISOString().substring(0, 10);
 
@@ -59,32 +65,42 @@ const submitCustomerForm = async (event) => {
 
     return (
         <form className="customerForm" onSubmit={submitCustomerForm}>
-            <Stack spacing={2} alignItems="center">
+            <Stack spacing={2} alignItems="center" >
                 <Typography variant="h4">Add Customer</Typography>
                 <TextField
 type="text"
-placeholder="Name"
+label="Name"
 name="name"
 variant="outlined"
 required
 autoFocus
 value={name}
 onChange={e => setName(e.target.value)}
+sx={{
+    width: 300
+}}
 />
             <TextField
 type="email"
-placeholder="Email"
+label="Email"
 name="username"
 variant="outlined"
 required
 autoFocus
 value={email}
 onChange={e => setEmail(e.target.value)}
+sx={{
+    width: 300
+}}
 />
 <DatePicker
-views={['year', 'month', 'day']}
+format="YYYY-MM-DD"
 label="Date of birth"
 onChange={value => setDob(value)}
+required
+sx={{
+    width: 300
+}}
 />
 
 <Button variant="contained" type="submit" disabled={isLoading}>

@@ -10,26 +10,28 @@ import {
 import { DatePicker } from '@mui/x-date-pickers';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import dayjs from 'dayjs';
 
-const UpdateModal = ({ setDialogueClosed, isDialogOpen, customerData, setCustomerData }) => {
+const UpdateModal = ({ setDialogueClosed, isDialogOpen, customerData, setCustomers ,customers }) => {
 
     const [ email, setEmail ] = useState("");
 const [ name, setName ] = useState("");
-const [ dob, setDob ] = useState(new Date());
+const [ dob, setDob ] = useState("");
 const [ id, setId ] = useState("");
 
 useEffect(() => {
-    console.log(customerData);
+
+    setDob(dayjs(customerData.dob));
     setEmail(customerData.email);
     setName(customerData.name);
     setId(customerData.id);
   }, [customerData]);
 
   const updateCustomer = async (event) => {
-
-    console.log("runs");
   
     event.preventDefault();
+
+    console.log(dob);
 
     const adjustedDate = dob.toISOString().substring(0, 10);
 
@@ -42,6 +44,21 @@ useEffect(() => {
     try {
         const request = await axios.put(`http://localhost:8080/customers/${id}`, body);
         console.log(request);
+        const updatedCustomers = customers.map(customer => {
+            if (customer.id === id) {
+              return {
+                ...customer,
+                email: email,
+                full_name: name,
+                dob: adjustedDate,
+              };
+            }
+            return customer;
+          });
+      
+          // Update the state with the modified customers list
+          setCustomers(updatedCustomers);
+          setDialogueClosed();
         
     } catch (error) {
         console.log(error);
@@ -67,7 +84,7 @@ useEffect(() => {
         <Stack spacing={2}>
           <TextField
             type="text"
-            placeholder="Name"
+            label="Name"
             name="name"
             variant="outlined"
             required
@@ -77,7 +94,7 @@ useEffect(() => {
           />
           <TextField
             type="email"
-            placeholder="Email"
+            label="Email"
             name="username"
             variant="outlined"
             required
@@ -86,9 +103,10 @@ useEffect(() => {
             onChange={e => setEmail(e.target.value)}
           />
           <DatePicker
-            views={['year', 'month', 'day']}
             label="Date of birth"
             onChange={value => setDob(value)}
+            value={dayjs(dob)}
+            format="YYYY-MM-DD"
           />
         </Stack>
       </DialogContent>

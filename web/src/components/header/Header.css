@@ -6,11 +6,16 @@ nav {
      align-items: center;
      padding-left: 1rem;
      padding-right: 1rem;
+
  }
 
  .logo {
     height: 100px;
     object-fit: cover;
+}
+
+.links {
+    text-decoration: none;
 }
 
 

@@ -17,14 +17,14 @@ const Header = () => {
       <img src={logo} alt="logo" className="logo"/>
       {pathnameForData === "/customers" && (
         <Stack direction="row" spacing={2}>
-          <Link to="/add">Add Customer</Link>
-       <Link to="/login">Log out</Link>
+          <Link to="/add" className="links">Add Customer</Link>
+       <Link to="/login" className="links">Log out</Link>
         </Stack>
       )}
       {pathnameForData === "/add" && (
         <Stack direction="row" spacing={2}>
-          <Link to="/customers">Customers</Link>
-       <Link to="/login">Log out</Link>
+          <Link to="/customers" className="links">Customers</Link>
+       <Link to="/login" className="links">Log out</Link>
         </Stack>
       )}
       

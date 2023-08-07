@@ -57,23 +57,29 @@ const submitLogin = async (event) => {
                 <Typography variant="h4">Events Management</Typography>
             <TextField
 type="email"
-placeholder="Email"
+label="Email"
 name="username"
 variant="outlined"
 required
 autoFocus
 value={email}
 onChange={emailInputChange}
+sx={{
+    width: 300
+}}
 />
 <TextField
 type="password"
-placeholder="Password"
+label="Password"
 name="password"
 variant="outlined"
 required
 autoFocus
 value={password}
 onChange={passwordInputChange}
+sx={{
+    width: 300
+}}
 />
 <Button variant="contained" type="submit" disabled={isLoading}>
   Login

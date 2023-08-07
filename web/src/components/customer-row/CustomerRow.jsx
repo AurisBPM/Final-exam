@@ -1,4 +1,10 @@
-import { Container, Stack } from "@mui/material";
+import styled from 'styled-components';
+import { Stack, Button } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+const StyledRow = styled.tr`
+  text-align: left;
+`;
 
 
 const CustomerRow = ({id, name, dob, email, auth_id, deleteFc, setDialogueOpen, setCustomerData}) => {
@@ -16,17 +22,18 @@ const updateClick = () => {
 }
 
     return (
-       <Container>
- <Stack spacing={2} direction="row">
-             <div>{name}</div>
-            <div>{dob}</div>
-            <div>{email}</div>
-          <div className="btns-div">
-            <button onClick={()=>{ deleteFc(id)}}>Delete</button>
-            <button onClick={() => {updateClick(); setDialogueOpen()}}>Update</button>
-          </div>
-        </Stack>
-       </Container>
+       <StyledRow>
+             <td>{name}</td>
+            <td>{dob}</td>
+            <td>{email}</td>
+          <td className="btns-div">
+            <Stack direction='row' spacing={2}>
+            <Button variant="outlined" startIcon={<DeleteIcon />} onClick={()=>{ deleteFc(id)}}>Delete</Button>
+            <Button variant="contained" onClick={() => {updateClick(); setDialogueOpen()}}>Update</Button>
+
+            </Stack>
+          </td>
+       </StyledRow>
        
          
         
