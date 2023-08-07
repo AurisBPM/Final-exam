@@ -30,9 +30,37 @@ router.get('/customers', async (req, res) => {
 router.delete('/customers/:customer_id', async (req, res) => {
   try {
     const customerId = req.params.customer_id;
-    const [request] = await mysqlPool.execute(`DELETE FROM customers WHERE id = ${customerId}`);
+    const [request] = await mysqlPool.execute(
+      `DELETE FROM customers WHERE id = ${customerId}`
+    );
     return res.json(request);
   } catch (error) {
+    return res.status(500).end();
+  }
+});
+
+router.put('/customers/:customer_id', async (req, res) => {
+  try {
+    const [customer] = await mysqlPool.query('SELECT id FROM customers WHERE id=?', [
+      req.params.id,
+    ]);
+
+    if (customer.length === 0) {
+      return res.status(400).json({
+        status: 400,
+        error: 'Customer does not exist!',
+      });
+    }
+
+    const payload = req.body;
+
+    const [response] = await mysqlPool.query('UPDATE customers SET ? WHERE id=?', [
+      payload,
+      req.params.id,
+    ]);
+    return res.status(200).json(response);
+  } catch (err) {
+    console.log(err);
     return res.status(500).end();
   }
 });
