@@ -35,4 +35,5 @@ table {
   margin-right: auto;
   margin-top: 2rem;
   border-collapse: collapse;
+  border-radius: 50px;
 }

@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import CustomerRow from "../components/customer-row/CustomerRow";
 import UpdateModal from "../components/update-modal/Update-Modal";
+import DeleteModal from "../components/delete-modal/DeleteModal";
 import Table from "../components/table/Table";
 
 
@@ -9,7 +10,9 @@ const Customers = () => {
 
   const [customers, setCustomers] = useState([]);
   const [ isDialogOpen, setDialogOpen ] = useState(false);
+  const [ isDeleteDialogOpen, setDeleteDialogOpen ] = useState(false);
   const [ customerData, setCustomerData ] = useState({});
+  const [ toDelete, setToDelete ] = useState("");
 
   const setDialogueOpen = () => {
     setDialogOpen(true);
@@ -30,6 +33,7 @@ const Customers = () => {
                 return id != customer.id
             })
         });
+        setDeleteDialogOpen(false);
     } catch (error) {
         console.log(error);
     }
@@ -65,7 +69,7 @@ const Customers = () => {
         <tbody>
         {customers.map((customer) => {
         return (
-            <CustomerRow key={customer.id} name={customer.full_name} dob={customer.dob} email={customer.email} id={customer.id} deleteFc={deleteCustomer} setDialogueOpen={setDialogueOpen} setCustomerData={setCustomerData}/>
+            <CustomerRow key={customer.id} name={customer.full_name} dob={customer.dob} email={customer.email} id={customer.id} setDialogueOpen={setDialogueOpen} setCustomerData={setCustomerData} setDeleteDialogOpen={setDeleteDialogOpen} setToDelete={setToDelete}/>
         )
     })}
         </tbody>
@@ -73,8 +77,8 @@ const Customers = () => {
 
   </table>
     
-    <UpdateModal setDialogueClosed={setDialogueClosed} isDialogOpen={isDialogOpen} customerData={customerData} setCustomerData={setCustomerData} setCustomers={setCustomers} customers={customers}/>
-
+    <UpdateModal setDialogueClosed={setDialogueClosed} isDialogOpen={isDialogOpen} customerData={customerData} setCustomerData={setCustomerData} setCustomers={setCustomers} customers={customers} />
+<DeleteModal isDeleteDialogOpen={isDeleteDialogOpen} setDeleteDialogOpen={setDeleteDialogOpen} deleteCustomer={deleteCustomer} toDelete={toDelete}/>
     </>
  
   

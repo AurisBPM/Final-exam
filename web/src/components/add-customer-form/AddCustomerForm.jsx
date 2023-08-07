@@ -1,4 +1,4 @@
-import {  Button, TextField, Stack, Typography } from "@mui/material";
+import {  Button, TextField, Stack, Typography, FormControl } from "@mui/material";
 import "../login-form/LoginForm.css";
 import { useState } from "react";
 import axios from "axios";
@@ -14,10 +14,38 @@ const [ dob, setDob ] = useState("");
 const [isLoading, setLoading] = useState(false);
 const [error, setError] = useState("");
 
+const [isNameInvalid, setIsNameInvalid] = useState(false);
+const [isEmailInvalid, setIsEmailInvalid] = useState(false);
+const [isDateInvalid, setIsDateInvalid] = useState(false);
+
 const navigate = useNavigate();
 
 
 const submitCustomerForm = async (event) => {
+
+    setIsNameInvalid(false);
+    setIsEmailInvalid(false);
+    setIsDateInvalid(false);    
+
+    if ( !name ){
+        setIsNameInvalid(true);
+    }
+    if ( !email ){
+        setIsEmailInvalid(true);
+    }
+
+    if (!dob) {
+        setIsDateInvalid(true);      
+
+    }
+
+    if ( !dob || !email || !name ){
+        setError("Please add all required information");
+        setLoading(false);
+        return;
+    }
+
+
     setLoading(true);
     setError("");
     event.preventDefault();
@@ -64,7 +92,7 @@ return;
     }
 
     return (
-        <form className="customerForm" onSubmit={submitCustomerForm}>
+        <FormControl className="customerForm">
             <Stack spacing={2} alignItems="center" >
                 <Typography variant="h4">Add Customer</Typography>
                 <TextField
@@ -75,6 +103,8 @@ variant="outlined"
 required
 autoFocus
 value={name}
+error={isNameInvalid}
+helperText={isNameInvalid && "Full name required"}
 onChange={e => setName(e.target.value)}
 sx={{
     width: 300
@@ -86,7 +116,8 @@ label="Email"
 name="username"
 variant="outlined"
 required
-autoFocus
+error={isEmailInvalid}
+helperText={isEmailInvalid && "Email required"}
 value={email}
 onChange={e => setEmail(e.target.value)}
 sx={{
@@ -101,16 +132,21 @@ required
 sx={{
     width: 300
 }}
+slotProps={{
+    textField: {
+      error: isDateInvalid
+    },
+  }}
 />
 
-<Button variant="contained" type="submit" disabled={isLoading}>
+<Button variant="contained" type="submit" disabled={isLoading} onClick={submitCustomerForm}>
   Add Customer
 </Button>
 
 <Typography variant="div">{error}</Typography>
             </Stack>
     
-        </form>
+        </FormControl>
     )
 }
 

@@ -1,4 +1,4 @@
-import {  Button, TextField, Stack, Typography } from "@mui/material";
+import {  Button, TextField, Stack, Typography, FormControl } from "@mui/material";
 import "./LoginForm.css";
 import { useState } from "react";
 import axios from "axios";
@@ -11,6 +11,9 @@ const [ password, setPassword ] = useState("");
 const [isLoading, setLoading] = useState(false);
 const [error, setError] = useState("");
 
+const [isEmailInvalid, setIsEmailInvalid] = useState(false);
+const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
+
 const navigate = useNavigate();
 
 const emailInputChange = (e) => {
@@ -20,10 +23,27 @@ const passwordInputChange = (e) => {
     setPassword(e.target.value);
 }
 
-const submitLogin = async (event) => {
+const submitLogin = async () => {
     setLoading(true);
     setError("");
-    event.preventDefault();
+   
+    setIsEmailInvalid(false);
+    setIsPasswordInvalid(false);    
+
+    if ( !email ){
+        setIsEmailInvalid(true);
+    }
+
+    if (!password) {
+        setIsPasswordInvalid(true);      
+
+    }
+
+    if ( !password || !email ){
+        setError("Please add all required information");
+        setLoading(false);
+        return;
+    }
 
     const body = {
         email: email,
@@ -52,16 +72,18 @@ const submitLogin = async (event) => {
     }
 
     return (
-        <form className="loginForm" onSubmit={submitLogin}>
+        <FormControl>
             <Stack spacing={2} alignItems="center">
                 <Typography variant="h4">Events Management</Typography>
             <TextField
 type="email"
 label="Email"
-name="username"
+name="email"
 variant="outlined"
 required
 autoFocus
+error={isEmailInvalid}
+helperText={isEmailInvalid && "Email required"}
 value={email}
 onChange={emailInputChange}
 sx={{
@@ -74,21 +96,22 @@ label="Password"
 name="password"
 variant="outlined"
 required
-autoFocus
 value={password}
+error={isPasswordInvalid}
+helperText={isPasswordInvalid && "Password required"}
 onChange={passwordInputChange}
 sx={{
     width: 300
 }}
 />
-<Button variant="contained" type="submit" disabled={isLoading}>
+<Button variant="contained" disabled={isLoading} onClick={submitLogin}>
   Login
 </Button>
 
 <Typography variant="div">{error}</Typography>
             </Stack>
     
-        </form>
+        </FormControl>
     )
 }
 

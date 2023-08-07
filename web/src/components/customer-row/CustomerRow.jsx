@@ -6,8 +6,13 @@ const StyledRow = styled.tr`
   text-align: left;
 `;
 
+const StyledBtnsTd = styled.td`
+  text-align: left;
+  width: 8rem;
+`;
 
-const CustomerRow = ({id, name, dob, email, auth_id, deleteFc, setDialogueOpen, setCustomerData}) => {
+
+const CustomerRow = ({id, name, dob, email, auth_id, deleteFc, setDialogueOpen, setCustomerData, setDeleteDialogOpen, setToDelete}) => {
 
 const updateClick = () => {
 
@@ -26,13 +31,13 @@ const updateClick = () => {
              <td>{name}</td>
             <td>{dob}</td>
             <td>{email}</td>
-          <td className="btns-div">
+          <StyledBtnsTd>
             <Stack direction='row' spacing={2}>
-            <Button variant="outlined" startIcon={<DeleteIcon />} onClick={()=>{ deleteFc(id)}}>Delete</Button>
+            <Button variant="outlined" startIcon={<DeleteIcon />} onClick={()=>{ setDeleteDialogOpen(true); setToDelete(id)}}>Delete</Button>
             <Button variant="contained" onClick={() => {updateClick(); setDialogueOpen()}}>Update</Button>
 
             </Stack>
-          </td>
+          </StyledBtnsTd>
        </StyledRow>
        
          
