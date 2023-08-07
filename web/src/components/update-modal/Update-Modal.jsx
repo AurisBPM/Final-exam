@@ -16,13 +16,18 @@ const UpdateModal = ({ setDialogueClosed, isDialogOpen, customerData, setCustome
     const [ email, setEmail ] = useState("");
 const [ name, setName ] = useState("");
 const [ dob, setDob ] = useState(new Date());
+const [ id, setId ] = useState("");
 
 useEffect(() => {
+    console.log(customerData);
     setEmail(customerData.email);
     setName(customerData.name);
+    setId(customerData.id);
   }, [customerData]);
 
   const updateCustomer = async (event) => {
+
+    console.log("runs");
   
     event.preventDefault();
 
@@ -35,7 +40,7 @@ useEffect(() => {
     }
 
     try {
-        const request = await axios.post(`http://localhost:8080/customers/${customerData.id}`, body);
+        const request = await axios.put(`http://localhost:8080/customers/${id}`, body);
         console.log(request);
         
     } catch (error) {

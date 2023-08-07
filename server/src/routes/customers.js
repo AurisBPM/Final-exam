@@ -40,9 +40,11 @@ router.delete('/customers/:customer_id', async (req, res) => {
 });
 
 router.put('/customers/:customer_id', async (req, res) => {
+    console.log(req.body);
+    console.log(req.params);
   try {
     const [customer] = await mysqlPool.query('SELECT id FROM customers WHERE id=?', [
-      req.params.id,
+      req.params.customer_id,
     ]);
 
     if (customer.length === 0) {
@@ -56,7 +58,7 @@ router.put('/customers/:customer_id', async (req, res) => {
 
     const [response] = await mysqlPool.query('UPDATE customers SET ? WHERE id=?', [
       payload,
-      req.params.id,
+      req.params.customer_id,
     ]);
     return res.status(200).json(response);
   } catch (err) {
