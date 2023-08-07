@@ -32,6 +32,7 @@ const submitLogin = async (event) => {
 
     try {
         const request = await axios.post("http://localhost:8080/login", body);
+        console.log(request);
         navigate(`/customers`)
         
     } catch (error) {

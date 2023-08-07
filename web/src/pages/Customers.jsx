@@ -1,11 +1,22 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import CustomerRow from "../components/customer-row/CustomerRow";
+import UpdateModal from "../components/update-modal/Update-Modal";
 
 
 const Customers = () => {
 
   const [customers, setCustomers] = useState([]);
+  const [ isDialogOpen, setDialogOpen ] = useState(false);
+  const [ customerData, setCustomerData ] = useState({});
+
+  const setDialogueOpen = () => {
+    setDialogOpen(true);
+  }
+
+  const setDialogueClosed = () => {
+    setDialogOpen(false);
+  }
 
   const customersUrl = "http://localhost:8080/customers";
 
@@ -41,9 +52,10 @@ const Customers = () => {
     <div className='container'>
     {customers.map((customer) => {
         return (
-            <CustomerRow key={customer.id} name={customer.full_name} dob={customer.dob} email={customer.email} id={customer.id} deleteFc={deleteCustomer}/>
+            <CustomerRow key={customer.id} name={customer.full_name} dob={customer.dob} email={customer.email} id={customer.id} deleteFc={deleteCustomer} setDialogueOpen={setDialogueOpen} setCustomerData={setCustomerData}/>
         )
     })}
+    <UpdateModal setDialogueClosed={setDialogueClosed} isDialogOpen={isDialogOpen} customerData={customerData} setCustomerData={setCustomerData}/>
   </div>
   );
 };
