@@ -72,7 +72,7 @@ const submitLogin = async () => {
     }
 
     return (
-        <FormControl>
+        <FormControl sx={{ paddingTop: '4rem' }}>
             <Stack spacing={2} alignItems="center">
                 <Typography variant="h4">Events Management</Typography>
             <TextField
@@ -87,7 +87,7 @@ helperText={isEmailInvalid && "Email required"}
 value={email}
 onChange={emailInputChange}
 sx={{
-    width: 300
+    width: 320
 }}
 />
 <TextField
@@ -101,7 +101,7 @@ error={isPasswordInvalid}
 helperText={isPasswordInvalid && "Password required"}
 onChange={passwordInputChange}
 sx={{
-    width: 300
+    width: 320
 }}
 />
 <Button variant="contained" disabled={isLoading} onClick={submitLogin}>

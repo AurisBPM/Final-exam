@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import CustomerRow from "../components/customer-row/CustomerRow";
 import UpdateModal from "../components/update-modal/Update-Modal";
 import DeleteModal from "../components/delete-modal/DeleteModal";
-import Table from "../components/table/Table";
+import { Typography } from "@mui/material";
 
 
 const Customers = () => {
@@ -56,7 +56,7 @@ const Customers = () => {
 
   return (
     <>
-    
+    <Typography variant="h4" sx={{ paddingTop: '2rem', textAlign: 'center' }}>Registered customers</Typography>
     <table className='container'>
         <thead>
             <tr>

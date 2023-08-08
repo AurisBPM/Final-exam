@@ -12,7 +12,7 @@ const StyledBtnsTd = styled.td`
 `;
 
 
-const CustomerRow = ({id, name, dob, email, auth_id, deleteFc, setDialogueOpen, setCustomerData, setDeleteDialogOpen, setToDelete}) => {
+const CustomerRow = ({id, name, dob, email, setDialogueOpen, setCustomerData, setDeleteDialogOpen, setToDelete}) => {
 
 const updateClick = () => {
 

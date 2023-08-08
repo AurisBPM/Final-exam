@@ -4,6 +4,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 
 
 const AddCustomerForm = () => {
@@ -92,7 +93,7 @@ return;
     }
 
     return (
-        <FormControl className="customerForm">
+        <FormControl sx={{ paddingTop: '4rem' }}>
             <Stack spacing={2} alignItems="center" >
                 <Typography variant="h4">Add Customer</Typography>
                 <TextField
@@ -107,7 +108,7 @@ error={isNameInvalid}
 helperText={isNameInvalid && "Full name required"}
 onChange={e => setName(e.target.value)}
 sx={{
-    width: 300
+    width: 320
 }}
 />
             <TextField
@@ -121,7 +122,7 @@ helperText={isEmailInvalid && "Email required"}
 value={email}
 onChange={e => setEmail(e.target.value)}
 sx={{
-    width: 300
+    width: 320
 }}
 />
 <DatePicker
@@ -129,12 +130,15 @@ format="YYYY-MM-DD"
 label="Date of birth"
 onChange={value => setDob(value)}
 required
+minDate={dayjs("1920-01-01")}
+maxDate={dayjs(new Date())}
 sx={{
-    width: 300
+    width: 320
 }}
 slotProps={{
     textField: {
-      error: isDateInvalid
+      error: isDateInvalid,
+      helperText: isDateInvalid ? "Date required" : "",
     },
   }}
 />
