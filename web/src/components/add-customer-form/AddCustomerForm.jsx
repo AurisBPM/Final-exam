@@ -7,6 +7,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 
 
+
 const AddCustomerForm = () => {
 
 const [ email, setEmail ] = useState("");
@@ -18,6 +19,7 @@ const [error, setError] = useState("");
 const [isNameInvalid, setIsNameInvalid] = useState(false);
 const [isEmailInvalid, setIsEmailInvalid] = useState(false);
 const [isDateInvalid, setIsDateInvalid] = useState(false);
+const [emailError, setEmailError] = useState("");
 
 const navigate = useNavigate();
 
@@ -26,13 +28,13 @@ const submitCustomerForm = async (event) => {
 
     setIsNameInvalid(false);
     setIsEmailInvalid(false);
-    setIsDateInvalid(false);    
+    setIsDateInvalid(false);
+    setEmailError("");   
+    setLoading(true);
+    setError("");   
 
     if ( !name ){
         setIsNameInvalid(true);
-    }
-    if ( !email ){
-        setIsEmailInvalid(true);
     }
 
     if (!dob) {
@@ -40,25 +42,26 @@ const submitCustomerForm = async (event) => {
 
     }
 
-    if ( !dob || !email || !name ){
+    if(!email.match(/^[A-Za-z\._\-0-9]*[@][A-Za-z]*[\.][a-z]{2,4}$/)){
+        setIsEmailInvalid(true);
+        setEmailError("Email invalid")
+       }
+    
+       if ( !email ){
+        setEmailError("Email required")
+        setIsEmailInvalid(true);
+    }
+
+    if ( !dob || !email || !name || !email.match(/^[A-Za-z\._\-0-9]*[@][A-Za-z]*[\.][a-z]{2,4}$/) ){
         setError("Please add all required information");
         setLoading(false);
         return;
     }
 
+    const localDate = new Date(dob);
+    localDate.setTime(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
 
-    setLoading(true);
-    setError("");
-    event.preventDefault();
-    console.log(dob);
-
-    if (!dob) {
-        setError("Please select Date of Birth");
-        setLoading(false);
-return;
-    }
-
-    const adjustedDate = dob.toISOString().substring(0, 10);
+    const adjustedDate = localDate.toISOString().substring(0, 10);
 
     const body = {
         email: email,
@@ -69,6 +72,7 @@ return;
 
     try {
         const request = await axios.post("http://localhost:8080/customers", body);
+        console.log(request);
         navigate(`/customers`)
         
     } catch (error) {
@@ -98,7 +102,7 @@ return;
                 <Typography variant="h4">Add Customer</Typography>
                 <TextField
 type="text"
-label="Name"
+label="Full name"
 name="name"
 variant="outlined"
 required
@@ -118,7 +122,7 @@ name="username"
 variant="outlined"
 required
 error={isEmailInvalid}
-helperText={isEmailInvalid && "Email required"}
+helperText={isEmailInvalid && emailError}
 value={email}
 onChange={e => setEmail(e.target.value)}
 sx={{
@@ -126,6 +130,8 @@ sx={{
 }}
 />
 <DatePicker
+openTo="year"
+views={['year', 'month', 'day']}
 format="YYYY-MM-DD"
 label="Date of birth"
 onChange={value => setDob(value)}
@@ -138,7 +144,7 @@ sx={{
 slotProps={{
     textField: {
       error: isDateInvalid,
-      helperText: isDateInvalid ? "Date required" : "",
+      helperText: isDateInvalid && "Date required",
     },
   }}
 />

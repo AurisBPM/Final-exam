@@ -18,8 +18,8 @@ const StyledContainer = styled.div`
 `;
 
 const UpdateModal = ({
-  setDialogueClosed,
-  isDialogOpen,
+  close,
+  open,
   customerData,
   setCustomers,
   customers,
@@ -28,39 +28,60 @@ const UpdateModal = ({
   const [name, setName] = useState('');
   const [dob, setDob] = useState('');
   const [id, setId] = useState('');
+  const [isLoading, setLoading] = useState(false);
+
 
   const [isNameInvalid, setIsNameInvalid] = useState(false);
   const [isEmailInvalid, setIsEmailInvalid] = useState(false);
   const [isDateInvalid, setIsDateInvalid] = useState(false);
+  const [emailError, setEmailError] = useState("");
+
+  
 
   useEffect(() => {
     setDob(dayjs(customerData.dob));
     setEmail(customerData.email);
     setName(customerData.name);
     setId(customerData.id);
+    setIsNameInvalid(false);
+    setIsEmailInvalid(false);
+    setIsDateInvalid(false);
+    setEmailError("");
   }, [customerData]);
 
-  const updateCustomer = async (event) => {
+  const updateCustomer = async () => {
     setIsNameInvalid(false);
     setIsEmailInvalid(false);
     setIsDateInvalid(false);
 
-    if (!name) {
-      setIsNameInvalid(true);
-    }
-    if (!email) {
-      setIsEmailInvalid(true);
+    if ( !name ){
+        setIsNameInvalid(true);
     }
 
     if (!dob) {
-      setIsDateInvalid(true);
+        setIsDateInvalid(true);      
+
     }
 
-    if (!dob || !email || !name) {
-      return;
+    if(!email.match(/^[A-Za-z\._\-0-9]*[@][A-Za-z]*[\.][a-z]{2,4}$/)){
+        setIsEmailInvalid(true);
+        setEmailError("Email invalid")
+       }
+    
+       if ( !email ){
+        setEmailError("Email required")
+        setIsEmailInvalid(true);
     }
 
-    const adjustedDate = dob.toISOString().substring(0, 10);
+    if ( !dob || !email || !name || !email.match(/^[A-Za-z\._\-0-9]*[@][A-Za-z]*[\.][a-z]{2,4}$/) ){
+        setLoading(false);
+        return;
+    }
+
+    const localDate = new Date(dob);
+    localDate.setTime(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
+
+    const adjustedDate = localDate.toISOString().substring(0, 10);
 
     const body = {
       email: email,
@@ -88,7 +109,7 @@ const UpdateModal = ({
 
       // Update the state with the modified customers list
       setCustomers(updatedCustomers);
-      setDialogueClosed();
+      close();
     } catch (error) {
       console.log(error);
       if (error.response) {
@@ -103,7 +124,7 @@ const UpdateModal = ({
   };
 
   return (
-    <Dialog open={isDialogOpen}>
+    <Dialog open={open}>
       <DialogTitle>Update customer</DialogTitle>
       <DialogContent>
         <StyledContainer>
@@ -130,7 +151,7 @@ const UpdateModal = ({
               variant="outlined"
               required
               error={isEmailInvalid}
-              helperText={isEmailInvalid && 'Email required'}
+              helperText={isEmailInvalid && emailError}
               value={email}
               sx={{
                 width: 320,
@@ -138,6 +159,7 @@ const UpdateModal = ({
               onChange={(e) => setEmail(e.target.value)}
             />
             <DatePicker
+            views={['year', 'month', 'day']}
               label="Date of birth"
               onChange={(value) => setDob(value)}
               value={dayjs(dob)}
@@ -150,7 +172,7 @@ const UpdateModal = ({
               slotProps={{
                 textField: {
                   error: isDateInvalid,
-                  helperText: isDateInvalid ? 'Date required' : '',
+                  helperText: isDateInvalid && 'Date required',
                 },
               }}
             />
@@ -158,10 +180,10 @@ const UpdateModal = ({
         </StyledContainer>
       </DialogContent>
       <DialogActions>
-        <Button variant="outlined" onClick={setDialogueClosed}>
+        <Button variant="outlined" onClick={close}>
           Cancel
         </Button>
-        <Button variant="contained" onClick={updateCustomer}>
+        <Button variant="contained" disabled={isLoading} onClick={updateCustomer}>
           Save
         </Button>
       </DialogActions>
