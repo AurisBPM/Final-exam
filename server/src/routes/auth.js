@@ -3,19 +3,19 @@ const mysql = require('mysql2');
 const joi = require('joi');
 const bcrypt = require('bcrypt');
 const DB_CONFIG = require('../config/db-config');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const router = express.Router();
 const mysqlPool = mysql.createPool(DB_CONFIG).promise();
 
 const authSchema = joi.object({
-  email: joi.string().email().trim().lowercase()
-    .required(),
+  email: joi.string().email().trim().lowercase().required(),
   password: joi.string().required(),
 });
 
 const loginSchema = joi.object({
-  email: joi.string().email().trim().lowercase()
-    .required(),
+  email: joi.string().email().trim().lowercase().required(),
   password: joi.string().required(),
 });
 
@@ -29,7 +29,10 @@ router.post('/register', async (req, res) => {
   }
   try {
     const encryptedPassword = await bcrypt.hash(payload.password, 10);
-    const [response] = await mysqlPool.execute('INSERT INTO users ( email, password ) VALUES ( ?, ? )', [payload.email, encryptedPassword]);
+    const [response] = await mysqlPool.execute(
+      'INSERT INTO users ( email, password ) VALUES ( ?, ? )',
+      [payload.email, encryptedPassword]
+    );
     return res.status(200).json(response);
   } catch (err) {
     if (err.code === 'ER_DUP_ENTRY') {
@@ -53,7 +56,7 @@ router.post('/login', async (req, res) => {
           SELECT * FROM auth
           WHERE email = ?
       `,
-      [payload.email],
+      [payload.email]
     );
 
     if (!data.length) {
@@ -62,12 +65,18 @@ router.post('/login', async (req, res) => {
 
     const isPasswordMatching = await bcrypt.compare(
       payload.password,
-      data[0].password,
+      data[0].password
     );
 
     if (isPasswordMatching) {
-      console.log('Matching password');
-      return res.status(200).end();
+      const token = jwt.sign(
+        {
+          email: data[0].email,
+          id: data[0].id,
+        },
+        process.env.JWT_SECRET,
+      );
+      return res.status(200).send({ token });
     }
 
     return res.status(400).send({ error: 'Email or password did not match' });

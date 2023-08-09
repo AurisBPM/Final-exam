@@ -3,6 +3,7 @@ import "./LoginForm.css";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie';
 
 const LoginForm = () => {
 
@@ -52,8 +53,11 @@ const submitLogin = async () => {
 
     try {
         const request = await axios.post("http://localhost:8080/login", body);
-        console.log(request);
-        navigate(`/customers`)
+        if (request.data.token) {
+            Cookies.set('token', request.data.token, { expires: 0.1 });
+            navigate(`/customers`)
+          }
+        
         
     } catch (error) {
         console.log(error);

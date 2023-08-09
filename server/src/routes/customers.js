@@ -1,11 +1,13 @@
 const express = require('express');
 const mysql = require('mysql2');
 const DB_CONFIG = require('../config/db-config');
+const { authenticate } = require('./middleware');
 
 const router = express.Router();
 const mysqlPool = mysql.createPool(DB_CONFIG).promise();
 
-router.post('/customers', async (req, res) => {
+
+router.post('/customers', authenticate, async (req, res) => {
   const payload = req.body;
   try {
     const [response] = await mysqlPool.execute(
@@ -18,7 +20,7 @@ router.post('/customers', async (req, res) => {
   }
 });
 
-router.get('/customers', async (req, res) => {
+router.get('/customers', authenticate, async (req, res) => {
   try {
     const [customers] = await mysqlPool.execute('SELECT * FROM customers');
     return res.json(customers);
@@ -27,7 +29,7 @@ router.get('/customers', async (req, res) => {
   }
 });
 
-router.delete('/customers/:customer_id', async (req, res) => {
+router.delete('/customers/:customer_id', authenticate, async (req, res) => {
   try {
     const customerId = req.params.customer_id;
     const [request] = await mysqlPool.execute(
@@ -39,9 +41,7 @@ router.delete('/customers/:customer_id', async (req, res) => {
   }
 });
 
-router.put('/customers/:customer_id', async (req, res) => {
-    console.log(req.body);
-    console.log(req.params);
+router.put('/customers/:customer_id', authenticate, async (req, res) => {
   try {
     const [customer] = await mysqlPool.query('SELECT id FROM customers WHERE id=?', [
       req.params.customer_id,
