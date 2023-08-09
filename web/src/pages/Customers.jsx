@@ -1,11 +1,13 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import UpdateModal from '../components/update-modal/Update-Modal';
 import DeleteModal from '../components/delete-modal/DeleteModal';
 import NoCustomersInfo from '../components/no-customers-info/NoCustomersInfo';
 import CustomersTable from '../components/table/CustomersTable.jsx';
+import { AuthContext } from '../auth/AuthContext';
 
 const Customers = () => {
+  const { token } = useContext(AuthContext);
   const [customers, setCustomers] = useState([]);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -20,12 +22,14 @@ const Customers = () => {
     setDialogOpen(false);
   };
 
-  const customersUrl = 'http://localhost:8080/customers';
-
   const deleteCustomer = async (id) => {
     try {
       const request = await axios.delete(
-        'http://localhost:8080/customers/' + id
+        'http://localhost:8080/customers/' + id, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
       );
       console.log(request);
       setCustomers((oldCustomers) => {
@@ -41,7 +45,11 @@ const Customers = () => {
 
   const fetchCustomers = async () => {
     try {
-      const response = await axios.get(customersUrl);
+      const response = await axios.get('http://localhost:8080/customers', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log(response);
       setCustomers(response.data);
     } catch (error) {

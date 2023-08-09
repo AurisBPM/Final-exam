@@ -1,11 +1,16 @@
 import {  Button, TextField, Stack, Typography, FormControl } from "@mui/material";
-import "./LoginForm.css";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie';
+import { useContext } from "react";
+import { AuthContext } from "../../auth/AuthContext";
 
 const LoginForm = () => {
+
+const { updateAuth, expiry } = useContext(AuthContext);
+console.log("time left:", expiry - Date.now());
+
 
 const [ email, setEmail ] = useState("");
 const [ password, setPassword ] = useState("");
@@ -55,6 +60,8 @@ const submitLogin = async () => {
         const request = await axios.post("http://localhost:8080/login", body);
         if (request.data.token) {
             Cookies.set('token', request.data.token, { expires: 0.1 });
+            const token = Cookies.get('token');
+            updateAuth(token);
             navigate(`/customers`)
           }
         
