@@ -7,10 +7,7 @@ import CustomersTable from '../components/table/CustomersTable.jsx';
 import { AuthContext } from '../auth/AuthContext';
 
 const Customers = () => {
-  
-    const { token } = useContext(AuthContext);
-console.log("customers");
-    console.log(token);
+  const { token } = useContext(AuthContext);
   const [customers, setCustomers] = useState([]);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -27,20 +24,22 @@ console.log("customers");
 
   const deleteCustomer = async (id) => {
     try {
-       
       const request = await axios.delete(
-        'http://localhost:8080/customers/' + id, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+        'http://localhost:8080/customers/' + id,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
+      if (request.status == 200){
       setCustomers((oldCustomers) => {
         return oldCustomers.filter((customer) => {
           return id != customer.id;
         });
       });
       setDeleteDialogOpen(false);
+    }
     } catch (error) {
       console.log(error);
     }
@@ -53,7 +52,6 @@ console.log("customers");
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response);
       setCustomers(response.data);
     } catch (error) {
       console.log(error);

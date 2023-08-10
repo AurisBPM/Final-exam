@@ -5,7 +5,7 @@ import {
   Typography,
   FormControl,
   Paper,
-  Box
+  Box,
 } from '@mui/material';
 import { useState } from 'react';
 import axios from 'axios';
@@ -74,9 +74,7 @@ const LoginForm = () => {
       const request = await axios.post('http://localhost:8080/login', body);
       if (request.data.token) {
         localStorage.setItem('token', request.data.token);
-        const token = localStorage.getItem('token');
-        console.log(token);
-        updateAuth(token);
+        updateAuth(request.data.token);
         navigate(`/customers`);
       }
     } catch (error) {
@@ -97,16 +95,15 @@ const LoginForm = () => {
 
   return (
     <StyledDiv>
-        <Box
-  component="img"
-  sx={{
-  height: 233,
-  width: 250,
- 
-  }}
-  alt="Company logo"
-  src={logo}
-  />
+      <Box
+        component="img"
+        sx={{
+          height: 233,
+          width: 250,
+        }}
+        alt="Company logo"
+        src={logo}
+      />
       <Paper elevation={3} sx={{ padding: '2rem' }}>
         <FormControl>
           <Stack spacing={2} alignItems="center">

@@ -11,23 +11,20 @@ import { useNavigate } from 'react-router-dom';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { AuthContext } from '../../auth/AuthContext';
-import { useJwt } from "react-jwt";
+import { useJwt } from 'react-jwt';
 import AddIcon from '@mui/icons-material/Add';
 import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import EmailIcon from '@mui/icons-material/Email';
 
 const AddCustomerForm = () => {
-
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const { token } = useContext(AuthContext);
 
   const { isExpired } = useJwt(token);
-  console.log(isExpired);
   if (isExpired) {
     navigate(`/login`);
   }
-
 
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
@@ -39,8 +36,6 @@ const AddCustomerForm = () => {
   const [isEmailInvalid, setIsEmailInvalid] = useState(false);
   const [isDateInvalid, setIsDateInvalid] = useState(false);
   const [emailError, setEmailError] = useState('');
-
-  
 
   const submitCustomerForm = async () => {
     setIsNameInvalid(false);
@@ -58,7 +53,7 @@ const AddCustomerForm = () => {
       setIsDateInvalid(true);
     }
 
-    if (!email.match(/^[A-Za-z\._\-0-9]*[@][A-Za-z]*[\.][a-z]{2,4}$/)) {
+    if (!email.match(/^[A-Za-z._\-0-9]*[@][A-Za-z]*[.][a-z]{2,4}$/)) {
       setIsEmailInvalid(true);
       setEmailError('Email invalid');
     }
@@ -72,7 +67,7 @@ const AddCustomerForm = () => {
       !dob ||
       !email ||
       !name ||
-      !email.match(/^[A-Za-z\._\-0-9]*[@][A-Za-z]*[\.][a-z]{2,4}$/)
+      !email.match(/^[A-Za-z._\-0-9]*[@][A-Za-z]*[.][a-z]{2,4}$/)
     ) {
       setError('Please add all required information');
       setLoading(false);
@@ -104,18 +99,18 @@ const AddCustomerForm = () => {
           },
         }
       );
-      console.log(request);
-      navigate(`/customers`);
+      if (request.status == 200){
+        navigate(`/customers`);
+      }   
     } catch (error) {
-      console.log(error);
       if (error.response) {
         if (error.response.data.error) {
-          console.log(error.response.data);
           setError(error.response.data.error);
           setLoading(false);
         } else {
           setError('User already exists');
           setLoading(false);
+      setIsEmailInvalid(true);
         }
       } else if (error.request) {
         setError('Server not responding');
@@ -136,7 +131,6 @@ const AddCustomerForm = () => {
           label="Full name"
           name="name"
           variant="outlined"
-          required
           autoFocus
           value={name}
           error={isNameInvalid}
@@ -158,7 +152,6 @@ const AddCustomerForm = () => {
           label="Email"
           name="username"
           variant="outlined"
-          required
           error={isEmailInvalid}
           helperText={isEmailInvalid && emailError}
           value={email}
@@ -193,7 +186,6 @@ const AddCustomerForm = () => {
             },
           }}
         />
-
         <Button
           variant="contained"
           type="submit"
@@ -203,8 +195,7 @@ const AddCustomerForm = () => {
         >
           Add Customer
         </Button>
-
-        <Typography variant="div">{error}</Typography>
+        <Typography variant="div" sx={{ color: "red" }}>{error}</Typography>
       </Stack>
     </FormControl>
   );

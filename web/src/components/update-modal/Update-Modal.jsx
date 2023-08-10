@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import {
   Dialog,
   DialogActions,
@@ -16,7 +17,6 @@ import { AuthContext } from '../../auth/AuthContext';
 import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import EmailIcon from '@mui/icons-material/Email';
-
 
 const StyledContainer = styled.div`
   padding-top: 0.5rem;
@@ -65,7 +65,7 @@ const UpdateModal = ({
       setIsDateInvalid(true);
     }
 
-    if (!email.match(/^[A-Za-z\._\-0-9]*[@][A-Za-z]*[\.][a-z]{2,4}$/)) {
+    if (!email.match(/^[A-Za-z._\-0-9]*[@][A-Za-z]*[.][a-z]{2,4}$/)) {
       setIsEmailInvalid(true);
       setEmailError('Email invalid');
     }
@@ -79,7 +79,7 @@ const UpdateModal = ({
       !dob ||
       !email ||
       !name ||
-      !email.match(/^[A-Za-z\._\-0-9]*[@][A-Za-z]*[\.][a-z]{2,4}$/)
+      !!email.match(/^[A-Za-z._\-0-9]*[@][A-Za-z]*[.][a-z]{2,4}$/)
     ) {
       setLoading(false);
       return;
@@ -109,7 +109,7 @@ const UpdateModal = ({
           },
         }
       );
-      console.log(request);
+      if (request.status == 200){
       const updatedCustomers = customers.map((customer) => {
         if (customer.id === id) {
           return {
@@ -122,24 +122,16 @@ const UpdateModal = ({
         return customer;
       });
 
-      // Update the state with the modified customers list
       setCustomers(updatedCustomers);
       close();
+    }
     } catch (error) {
-      console.log(error);
-      if (error.response) {
-        if (error.response.data.error) {
-          console.log(error.response.data);
-        } else {
-        }
-      } else if (error.request) {
-      } else {
-      }
+     console.log(error);
     }
   };
 
   return (
-    <Dialog open={open} style={{ textAlign: "center" }}>
+    <Dialog open={open} style={{ textAlign: 'center' }}>
       <DialogTitle>Update customer</DialogTitle>
       <DialogContent>
         <StyledContainer>
@@ -208,7 +200,7 @@ const UpdateModal = ({
           </Stack>
         </StyledContainer>
       </DialogContent>
-      <DialogActions style={{ justifyContent: "center" }}>
+      <DialogActions style={{ justifyContent: 'center' }}>
         <Button variant="outlined" onClick={close}>
           Cancel
         </Button>

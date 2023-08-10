@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const jwt = require('jsonwebtoken');
 
 module.exports = {

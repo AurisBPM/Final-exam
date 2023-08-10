@@ -1,21 +1,24 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const express = require('express');
 const mysql = require('mysql2');
 const joi = require('joi');
 const bcrypt = require('bcrypt');
-const DB_CONFIG = require('../config/db-config');
 const jwt = require('jsonwebtoken');
+const DB_CONFIG = require('../config/db-config');
 require('dotenv').config();
 
 const router = express.Router();
 const mysqlPool = mysql.createPool(DB_CONFIG).promise();
 
 const authSchema = joi.object({
-  email: joi.string().email().trim().lowercase().required(),
+  email: joi.string().email().trim().lowercase()
+    .required(),
   password: joi.string().required(),
 });
 
 const loginSchema = joi.object({
-  email: joi.string().email().trim().lowercase().required(),
+  email: joi.string().email().trim().lowercase()
+    .required(),
   password: joi.string().required(),
 });
 
@@ -78,7 +81,6 @@ router.post('/login', async (req, res) => {
       );
       return res.status(200).send({ token });
     }
-
     return res.status(400).send({ error: 'Email or password did not match' });
   } catch (error) {
     return res.status(500).end();
