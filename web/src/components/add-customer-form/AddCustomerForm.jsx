@@ -12,6 +12,10 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { AuthContext } from '../../auth/AuthContext';
 import { useJwt } from "react-jwt";
+import AddIcon from '@mui/icons-material/Add';
+import InputAdornment from '@mui/material/InputAdornment';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import EmailIcon from '@mui/icons-material/Email';
 
 const AddCustomerForm = () => {
 
@@ -141,6 +145,13 @@ const AddCustomerForm = () => {
           sx={{
             width: 320,
           }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <AccountCircleIcon />
+              </InputAdornment>
+            ),
+          }}
         />
         <TextField
           type="email"
@@ -154,6 +165,13 @@ const AddCustomerForm = () => {
           onChange={(e) => setEmail(e.target.value)}
           sx={{
             width: 320,
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <EmailIcon />
+              </InputAdornment>
+            ),
           }}
         />
         <DatePicker
@@ -181,6 +199,7 @@ const AddCustomerForm = () => {
           type="submit"
           disabled={isLoading}
           onClick={submitCustomerForm}
+          startIcon={<AddIcon />}
         >
           Add Customer
         </Button>

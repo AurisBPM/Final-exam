@@ -12,15 +12,13 @@ const Header = () => {
   const pathnameForData = pathname.replace(/[0-9]/g, "");
 
 
-
-
   return (
     <nav>
       <img src={logo} alt="logo" className="logo"/>
       {pathnameForData === "/customers" && (
         <Stack direction="row" spacing={2}>
           <Link to="/add" className="links">Add Customer</Link>
-       <Link to="/login" className="links">Log out</Link>
+       <Link to="/login" className="links" startIcon={<AddIcon />}>Log out</Link>
         </Stack>
       )}
       {pathnameForData === "/add" && (

@@ -14,6 +14,9 @@ import { useContext } from 'react';
 import { AuthContext } from '../../auth/AuthContext';
 import styled from '@emotion/styled';
 import logo from '../../assets/logo.svg';
+import InputAdornment from '@mui/material/InputAdornment';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import EmailIcon from '@mui/icons-material/Email';
 
 const StyledDiv = styled.div`
   margin-left: auto;
@@ -113,7 +116,6 @@ const LoginForm = () => {
               label="Email"
               name="email"
               variant="outlined"
-              required
               autoFocus
               error={isEmailInvalid}
               helperText={isEmailInvalid && 'Email required'}
@@ -122,19 +124,32 @@ const LoginForm = () => {
               sx={{
                 width: 320,
               }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <EmailIcon />
+                  </InputAdornment>
+                ),
+              }}
             />
             <TextField
               type="password"
               label="Password"
               name="password"
               variant="outlined"
-              required
               value={password}
               error={isPasswordInvalid}
               helperText={isPasswordInvalid && 'Password required'}
               onChange={passwordInputChange}
               sx={{
                 width: 320,
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LockOpenIcon />
+                  </InputAdornment>
+                ),
               }}
             />
             <Button

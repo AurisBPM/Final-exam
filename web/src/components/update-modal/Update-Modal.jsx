@@ -13,6 +13,10 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import styled from '@emotion/styled';
 import { AuthContext } from '../../auth/AuthContext';
+import InputAdornment from '@mui/material/InputAdornment';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import EmailIcon from '@mui/icons-material/Email';
+
 
 const StyledContainer = styled.div`
   padding-top: 0.5rem;
@@ -135,7 +139,7 @@ const UpdateModal = ({
   };
 
   return (
-    <Dialog open={open}>
+    <Dialog open={open} style={{ textAlign: "center" }}>
       <DialogTitle>Update customer</DialogTitle>
       <DialogContent>
         <StyledContainer>
@@ -153,6 +157,13 @@ const UpdateModal = ({
               sx={{
                 width: 320,
               }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AccountCircleIcon />
+                  </InputAdornment>
+                ),
+              }}
               onChange={(e) => setName(e.target.value)}
             />
             <TextField
@@ -166,6 +177,13 @@ const UpdateModal = ({
               value={email}
               sx={{
                 width: 320,
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <EmailIcon />
+                  </InputAdornment>
+                ),
               }}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -190,7 +208,7 @@ const UpdateModal = ({
           </Stack>
         </StyledContainer>
       </DialogContent>
-      <DialogActions>
+      <DialogActions style={{ justifyContent: "center" }}>
         <Button variant="outlined" onClick={close}>
           Cancel
         </Button>

@@ -1,4 +1,4 @@
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 import { useContext } from "react";
 import Layout from "../components/layout/Layout";

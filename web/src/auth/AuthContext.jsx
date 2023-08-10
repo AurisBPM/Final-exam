@@ -14,8 +14,6 @@ const AuthContextProvider = ({ children }) => {
 
   useEffect(() => {
     const existingToken = localStorage.getItem('token');
-    console.log("existing");
-    console.log(existingToken);
 
     if (existingToken) {
       updateAuth(existingToken);
