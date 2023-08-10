@@ -11,7 +11,7 @@ import {
   
     return (
       <Dialog open={isDeleteDialogOpen}>
-        <DialogTitle>Are you sure?</DialogTitle>
+        <DialogTitle>Confirm customer delete</DialogTitle>
         <DialogActions>
           <Button variant="outlined" onClick={() => {setDeleteDialogOpen(false)}}>
             Cancel

@@ -7,7 +7,10 @@ import CustomersTable from '../components/table/CustomersTable.jsx';
 import { AuthContext } from '../auth/AuthContext';
 
 const Customers = () => {
-  const { token } = useContext(AuthContext);
+  
+    const { token } = useContext(AuthContext);
+console.log("customers");
+    console.log(token);
   const [customers, setCustomers] = useState([]);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -24,6 +27,7 @@ const Customers = () => {
 
   const deleteCustomer = async (id) => {
     try {
+       
       const request = await axios.delete(
         'http://localhost:8080/customers/' + id, {
             headers: {
@@ -31,7 +35,6 @@ const Customers = () => {
             },
           }
       );
-      console.log(request);
       setCustomers((oldCustomers) => {
         return oldCustomers.filter((customer) => {
           return id != customer.id;

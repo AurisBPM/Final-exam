@@ -12,6 +12,8 @@ const Header = () => {
   const pathnameForData = pathname.replace(/[0-9]/g, "");
 
 
+
+
   return (
     <nav>
       <img src={logo} alt="logo" className="logo"/>

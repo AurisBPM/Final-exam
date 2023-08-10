@@ -21,7 +21,6 @@ const loginSchema = joi.object({
 
 router.post('/register', async (req, res) => {
   let payload = req.body;
-  console.log(payload);
   try {
     payload = await authSchema.validateAsync(payload);
   } catch (err) {
@@ -30,8 +29,8 @@ router.post('/register', async (req, res) => {
   try {
     const encryptedPassword = await bcrypt.hash(payload.password, 10);
     const [response] = await mysqlPool.execute(
-      'INSERT INTO users ( email, password ) VALUES ( ?, ? )',
-      [payload.email, encryptedPassword]
+      'INSERT INTO auth ( email, password ) VALUES ( ?, ? )',
+      [payload.email, encryptedPassword],
     );
     return res.status(200).json(response);
   } catch (err) {
@@ -56,7 +55,7 @@ router.post('/login', async (req, res) => {
           SELECT * FROM auth
           WHERE email = ?
       `,
-      [payload.email]
+      [payload.email],
     );
 
     if (!data.length) {
@@ -65,7 +64,7 @@ router.post('/login', async (req, res) => {
 
     const isPasswordMatching = await bcrypt.compare(
       payload.password,
-      data[0].password
+      data[0].password,
     );
 
     if (isPasswordMatching) {
@@ -73,6 +72,7 @@ router.post('/login', async (req, res) => {
         {
           email: data[0].email,
           id: data[0].id,
+          exp: Math.floor(Date.now() / 1000) + 60,
         },
         process.env.JWT_SECRET,
       );

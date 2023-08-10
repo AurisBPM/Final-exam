@@ -5,18 +5,26 @@ import {
   Typography,
   FormControl,
 } from '@mui/material';
-import '../login-form/LoginForm.css';
 import { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { AuthContext } from '../../auth/AuthContext';
+import { useJwt } from "react-jwt";
 
 const AddCustomerForm = () => {
+
+    const navigate = useNavigate();
   const { token } = useContext(AuthContext);
-  console.log(token);
-  console.log('add customrr');
+
+  const { isExpired } = useJwt(token);
+  console.log(isExpired);
+  if (isExpired) {
+    navigate(`/login`);
+  }
+
+
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [dob, setDob] = useState('');
@@ -28,7 +36,7 @@ const AddCustomerForm = () => {
   const [isDateInvalid, setIsDateInvalid] = useState(false);
   const [emailError, setEmailError] = useState('');
 
-  const navigate = useNavigate();
+  
 
   const submitCustomerForm = async () => {
     setIsNameInvalid(false);
