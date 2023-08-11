@@ -1,4 +1,4 @@
-import AddCustomerForm from "../components/add-customer-form/AddCustomerForm";
+import AddCustomerForm from '../components/add-customer-form/AddCustomerForm';
 
 const Add = () => {
 

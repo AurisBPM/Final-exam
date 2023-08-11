@@ -11,23 +11,23 @@ const Header = () => {
 
   return (
     <nav>
-      <img src={logo} alt="logo" className="logo" />
+      <img src={logo} alt='logo' className='logo' />
       {pathnameForData === '/customers' && (
         <Stack direction="row" spacing={2}>
-          <Link to="/add" className="links">
+          <Link to='/add' className='links'>
             Add Customer
           </Link>
-          <Link to="/login" className="links">
+          <Link to='/login' className='links'>
             Log out
           </Link>
         </Stack>
       )}
       {pathnameForData === '/add' && (
-        <Stack direction="row" spacing={2}>
-          <Link to="/customers" className="links">
+        <Stack direction='row' spacing={2}>
+          <Link to='/customers' className='links'>
             Customers
           </Link>
-          <Link to="/login" className="links">
+          <Link to='/login' className='links'>
             Log out
           </Link>
         </Stack>

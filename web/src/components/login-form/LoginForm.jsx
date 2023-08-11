@@ -34,6 +34,7 @@ const LoginForm = () => {
 
   const [isEmailInvalid, setIsEmailInvalid] = useState(false);
   const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
+  const [emailError, setEmailError] = useState('');
 
   const navigate = useNavigate();
 
@@ -50,16 +51,27 @@ const LoginForm = () => {
 
     setIsEmailInvalid(false);
     setIsPasswordInvalid(false);
+    setEmailError('');
 
     if (!email) {
       setIsEmailInvalid(true);
+      setEmailError('Email required');
+    }
+
+    if (!email.match(/^[A-Za-z._\-0-9]*[@][A-Za-z]*[.][a-z]{2,4}$/)) {
+      setIsEmailInvalid(true);
+      setEmailError('Email invalid');
     }
 
     if (!password) {
       setIsPasswordInvalid(true);
     }
 
-    if (!password || !email) {
+    if (
+      !password ||
+      !email ||
+      !email.match(/^[A-Za-z._\-0-9]*[@][A-Za-z]*[.][a-z]{2,4}$/)
+    ) {
       setError('Please add all required information');
       setLoading(false);
       return;
@@ -96,68 +108,74 @@ const LoginForm = () => {
   return (
     <StyledDiv>
       <Box
-        component="img"
+        component='img'
         sx={{
           height: 233,
           width: 250,
         }}
-        alt="Company logo"
+        alt='Company logo'
         src={logo}
       />
       <Paper elevation={3} sx={{ padding: '2rem' }}>
         <FormControl>
-          <Stack spacing={2} alignItems="center">
-            <Typography variant="h4">Events Management</Typography>
+          <Stack spacing={2} alignItems='center'>
+            <Typography variant='h4'>Events Management</Typography>
             <TextField
-              type="email"
-              label="Email"
-              name="email"
-              variant="outlined"
+              type='email'
+              label='Email'
+              name='email'
+              variant='outlined'
               autoFocus
               error={isEmailInvalid}
-              helperText={isEmailInvalid && 'Email required'}
+              helperText={isEmailInvalid && emailError}
               value={email}
               onChange={emailInputChange}
               sx={{
                 width: 320,
+                height: '4.5rem',
+                marginBottom: '0.5rem',
               }}
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
+                  <InputAdornment position='start'>
                     <EmailIcon />
                   </InputAdornment>
                 ),
               }}
             />
             <TextField
-              type="password"
-              label="Password"
-              name="password"
-              variant="outlined"
+              type='password'
+              label='Password'
+              name='password'
+              variant='outlined'
               value={password}
               error={isPasswordInvalid}
               helperText={isPasswordInvalid && 'Password required'}
               onChange={passwordInputChange}
               sx={{
                 width: 320,
+                height: '4.5rem',
+                marginBottom: '0.5rem',
               }}
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
+                  <InputAdornment position='start'>
                     <LockOpenIcon />
                   </InputAdornment>
                 ),
               }}
             />
             <Button
-              variant="contained"
+              variant='contained'
               disabled={isLoading}
               onClick={submitLogin}
             >
               Login
             </Button>
 
-            <Typography variant="div">{error}</Typography>
+            <Typography variant='div' sx={{ color: 'red' }}>
+              {error}
+            </Typography>
           </Stack>
         </FormControl>
       </Paper>

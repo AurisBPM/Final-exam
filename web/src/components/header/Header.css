@@ -1,5 +1,5 @@
 nav {
-     border: 1px solid lightgrey;
+     border: 1px solid #3A506B;
      display: flex;
      flex-direction: row;
      justify-content: space-between;

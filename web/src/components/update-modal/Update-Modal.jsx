@@ -17,6 +17,8 @@ import { AuthContext } from '../../auth/AuthContext';
 import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import EmailIcon from '@mui/icons-material/Email';
+import { useJwt } from 'react-jwt';
+import { useNavigate } from 'react-router-dom';
 
 const StyledContainer = styled.div`
   padding-top: 0.5rem;
@@ -29,10 +31,16 @@ const UpdateModal = ({
   setCustomers,
   customers,
 }) => {
+  const navigate = useNavigate();
   const { token } = useContext(AuthContext);
+  const { isExpired } = useJwt(token);
+  if (isExpired) {
+    navigate(`/login`);
+  }
+
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  const [dob, setDob] = useState('');
+  const [dob, setDob] = useState(null);
   const [id, setId] = useState('');
   const [isLoading, setLoading] = useState(false);
 
@@ -42,6 +50,7 @@ const UpdateModal = ({
   const [emailError, setEmailError] = useState('');
 
   useEffect(() => {
+    console.log(customerData.dob);
     setDob(dayjs(customerData.dob));
     setEmail(customerData.email);
     setName(customerData.name);
@@ -56,6 +65,7 @@ const UpdateModal = ({
     setIsNameInvalid(false);
     setIsEmailInvalid(false);
     setIsDateInvalid(false);
+    setEmailError('');
 
     if (!name) {
       setIsNameInvalid(true);
@@ -79,7 +89,7 @@ const UpdateModal = ({
       !dob ||
       !email ||
       !name ||
-      !!email.match(/^[A-Za-z._\-0-9]*[@][A-Za-z]*[.][a-z]{2,4}$/)
+      !email.match(/^[A-Za-z._\-0-9]*[@][A-Za-z]*[.][a-z]{2,4}$/)
     ) {
       setLoading(false);
       return;
@@ -109,24 +119,27 @@ const UpdateModal = ({
           },
         }
       );
-      if (request.status == 200){
-      const updatedCustomers = customers.map((customer) => {
-        if (customer.id === id) {
-          return {
-            ...customer,
-            email: email,
-            full_name: name,
-            dob: adjustedDate,
-          };
-        }
-        return customer;
-      });
+      if (request.status == 200) {
+        const updatedCustomers = customers.map((customer) => {
+          if (customer.id === id) {
+            return {
+              ...customer,
+              email: email,
+              full_name: name,
+              dob: adjustedDate,
+            };
+          }
+          return customer;
+        });
 
-      setCustomers(updatedCustomers);
-      close();
-    }
+        setCustomers(updatedCustomers);
+        close();
+      }
     } catch (error) {
-     console.log(error);
+      console.log(error);
+      if (error.response.statusText == 'Unauthorized') {
+        navigate(`/login`);
+      }
     }
   };
 
@@ -137,10 +150,10 @@ const UpdateModal = ({
         <StyledContainer>
           <Stack spacing={2}>
             <TextField
-              type="text"
-              label="Name"
-              name="name"
-              variant="outlined"
+              type='text'
+              label='Name'
+              name='name'
+              variant='outlined'
               required
               error={isNameInvalid}
               helperText={isNameInvalid && 'Full name required'}
@@ -148,10 +161,12 @@ const UpdateModal = ({
               value={name}
               sx={{
                 width: 320,
+                height: '4.5rem',
+                marginBottom: '0.5rem',
               }}
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
+                  <InputAdornment position='start'>
                     <AccountCircleIcon />
                   </InputAdornment>
                 ),
@@ -159,20 +174,21 @@ const UpdateModal = ({
               onChange={(e) => setName(e.target.value)}
             />
             <TextField
-              type="email"
-              label="Email"
-              name="username"
-              variant="outlined"
-              required
+              type='email'
+              label='Email'
+              name='username'
+              variant='outlined'
               error={isEmailInvalid}
               helperText={isEmailInvalid && emailError}
               value={email}
               sx={{
                 width: 320,
+                height: '4.5rem',
+                marginBottom: '0.5rem',
               }}
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
+                  <InputAdornment position='start'>
                     <EmailIcon />
                   </InputAdornment>
                 ),
@@ -181,16 +197,21 @@ const UpdateModal = ({
             />
             <DatePicker
               views={['year', 'month', 'day']}
-              label="Date of birth"
+              label='Date of birth'
               onChange={(value) => setDob(value)}
-              value={dayjs(dob)}
-              format="YYYY-MM-DD"
+              value={dob}
+              format='YYYY-MM-DD'
               minDate={dayjs('1920-01-01')}
-              maxDate={dayjs(new Date())}
+              disableFuture
               sx={{
                 width: 320,
+                height: '4.5rem',
+                marginBottom: '0.5rem',
               }}
               slotProps={{
+                inputAdornment: {
+                    position: 'start'
+                  },
                 textField: {
                   error: isDateInvalid,
                   helperText: isDateInvalid && 'Date required',
@@ -201,11 +222,11 @@ const UpdateModal = ({
         </StyledContainer>
       </DialogContent>
       <DialogActions style={{ justifyContent: 'center' }}>
-        <Button variant="outlined" onClick={close}>
+        <Button variant='outlined' onClick={close}>
           Cancel
         </Button>
         <Button
-          variant="contained"
+          variant='contained'
           disabled={isLoading}
           onClick={updateCustomer}
         >

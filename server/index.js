@@ -11,5 +11,5 @@ server.use('/', authRoute);
 server.use('/', customersRoute);
 
 server.listen(8080, () => {
-  console.log('Server runs on port 8080 test');
+  console.log('Server runs on port 8080');
 });

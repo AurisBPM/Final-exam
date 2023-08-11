@@ -5,14 +5,19 @@ import DeleteModal from '../components/delete-modal/DeleteModal';
 import NoCustomersInfo from '../components/no-customers-info/NoCustomersInfo';
 import CustomersTable from '../components/table/CustomersTable.jsx';
 import { AuthContext } from '../auth/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 const Customers = () => {
+  const navigate = useNavigate();
   const { token } = useContext(AuthContext);
   const [customers, setCustomers] = useState([]);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [customerData, setCustomerData] = useState({});
   const [toDelete, setToDelete] = useState('');
+  const [isLoading, setLoading] = useState(true);
 
   const setDialogueOpen = () => {
     setDialogOpen(true);
@@ -32,16 +37,19 @@ const Customers = () => {
           },
         }
       );
-      if (request.status == 200){
-      setCustomers((oldCustomers) => {
-        return oldCustomers.filter((customer) => {
-          return id != customer.id;
+      if (request.status == 200) {
+        setCustomers((oldCustomers) => {
+          return oldCustomers.filter((customer) => {
+            return id != customer.id;
+          });
         });
-      });
-      setDeleteDialogOpen(false);
-    }
+        setDeleteDialogOpen(false);
+      }
     } catch (error) {
       console.log(error);
+      if (error.response.statusText == 'Unauthorized') {
+        navigate(`/login`);
+      }
     }
   };
 
@@ -52,9 +60,14 @@ const Customers = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log(response);
       setCustomers(response.data);
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      if (error.response.statusText == 'Unauthorized') {
+        navigate(`/login`);
+      }
     }
   };
 
@@ -62,7 +75,11 @@ const Customers = () => {
     fetchCustomers();
   }, []);
 
-  return customers.length ? (
+  return isLoading ? (
+    <Box sx={{ display: 'flex' }}>
+      <CircularProgress />
+    </Box>
+  ) : customers.length ? (
     <>
       <CustomersTable
         customers={customers}

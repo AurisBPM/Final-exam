@@ -7,7 +7,7 @@ const NoCustomersInfo = () => {
 
   return (
     <Stack spacing={2} direction='column' alignItems='center'>
-      <Typography variant="h5" sx={{ paddingTop: '2rem', textAlign: 'center' }}>
+      <Typography variant='h5' sx={{ paddingTop: '2rem', textAlign: 'center' }}>
         No Registered customers
       </Typography>
       <Button

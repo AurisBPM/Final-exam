@@ -99,18 +99,21 @@ const AddCustomerForm = () => {
           },
         }
       );
-      if (request.status == 200){
+      if (request.status == 200) {
         navigate(`/customers`);
-      }   
+      }
     } catch (error) {
       if (error.response) {
+        if (error.response.statusText == 'Unauthorized') {
+          navigate(`/login`);
+        }
         if (error.response.data.error) {
           setError(error.response.data.error);
           setLoading(false);
         } else {
           setError('User already exists');
           setLoading(false);
-      setIsEmailInvalid(true);
+          setIsEmailInvalid(true);
         }
       } else if (error.request) {
         setError('Server not responding');
@@ -138,6 +141,8 @@ const AddCustomerForm = () => {
           onChange={(e) => setName(e.target.value)}
           sx={{
             width: 320,
+            height: '4.5rem',
+            marginBottom: '0.5rem',
           }}
           InputProps={{
             startAdornment: (
@@ -158,6 +163,8 @@ const AddCustomerForm = () => {
           onChange={(e) => setEmail(e.target.value)}
           sx={{
             width: 320,
+            height: '4.5rem',
+            marginBottom: '0.5rem',
           }}
           InputProps={{
             startAdornment: (
@@ -173,13 +180,18 @@ const AddCustomerForm = () => {
           format="YYYY-MM-DD"
           label="Date of birth"
           onChange={(value) => setDob(value)}
-          required
+          disableFuture
           minDate={dayjs('1920-01-01')}
-          maxDate={dayjs(new Date())}
+          value={dob}
           sx={{
             width: 320,
+            height: '4.5rem',
+            marginBottom: '0.5rem',
           }}
           slotProps={{
+            inputAdornment: {
+              position: 'start',
+            },
             textField: {
               error: isDateInvalid,
               helperText: isDateInvalid && 'Date required',
@@ -195,7 +207,9 @@ const AddCustomerForm = () => {
         >
           Add Customer
         </Button>
-        <Typography variant="div" sx={{ color: "red" }}>{error}</Typography>
+        <Typography variant="div" sx={{ color: 'red' }}>
+          {error}
+        </Typography>
       </Stack>
     </FormControl>
   );
